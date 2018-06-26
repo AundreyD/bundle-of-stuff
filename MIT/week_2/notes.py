@@ -102,3 +102,38 @@ while abs(guess*guess - y) >= epsilon:
     guess = guess - (((guess**2) - y)/(2*guess))
 print('numGuesses =',str(numGuesses))
 print('square root of',str(y),'is about',str(guess))
+
+#Tower of Hanoi
+def printMove(fr, to):
+    print('move from ',str(fr),'to',fr(to))
+
+def Towers(n, fr, to, spare):
+    if n == 1:
+        printMove(fr, to)
+    else:
+        Towers(n-1, fr, spare, to)
+        Towers(1, fr, to, spare)
+        Towers(n-1, spare, to, fr)
+
+#Fibonacci
+def fib(x):
+    if x == 0 or x ==1:
+        return 1
+    else:
+        return fib(x-1) + fib(x-2)
+
+#recursive palindrome
+def isPalindrome(x):
+    def toChars(x):
+        x = x.lower()
+        ans = ''
+        for c in x:
+            if c in 'abcdefghijklmnopqrstuvwxyz':
+                ans += c
+        return ans
+    def isPal(s):
+        if len(s) <= 1:
+            return True
+        else:
+            return s[0] == s[-1] and isPal(s[1:-1])
+    return isPal(toChars(x))
