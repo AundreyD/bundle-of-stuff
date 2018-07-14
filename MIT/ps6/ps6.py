@@ -150,17 +150,16 @@ class PlaintextMessage(Message):
         
         text (string): the message's text
         shift (integer): the shift associated with this message
-
         A PlaintextMessage object inherits from Message and has five attributes:
             self.message_text (string, determined by input text)
             self.valid_words (list, determined using helper function load_words)
             self.shift (integer, determined by input shift)
             self.encrypting_dict (dictionary, built using shift)
             self.message_text_encrypted (string, created using shift)
-
         Hint: consider using the parent class constructor so less 
         code is repeated
         '''
+        Message.__init__(self, text)
         self.shift = shift
         self.encrypting_dict = Message.build_shift_dict(self, self.shift)
         self.message_text_encrypted = Message.apply_shift(self, self.shift)
@@ -171,16 +170,20 @@ class PlaintextMessage(Message):
         
         Returns: self.shift
         '''
+        
         return self.shift
 
+    
     def get_encrypting_dict(self):
         '''
         Used to safely access a copy self.encrypting_dict outside of the class
         
         Returns: a COPY of self.encrypting_dict
         '''
+         
         return self.encrypting_dict.copy()
 
+    
     def get_message_text_encrypted(self):
         '''
         Used to safely access self.message_text_encrypted outside of the class
@@ -190,6 +193,7 @@ class PlaintextMessage(Message):
         self.message_text_encrypted = Message.apply_shift(self, self.shift)
         return self.message_text_encrypted
 
+    
     def change_shift(self, shift):
         '''
         Changes self.shift of the PlaintextMessage and updates other 
@@ -198,12 +202,14 @@ class PlaintextMessage(Message):
         
         shift (integer): the new shift that should be associated with this message.
         0 <= shift < 26
-
         Returns: nothing
         '''
+        assert shift >= 0 and shift < 26, "Invalid shift value"
+        
         self.shift = shift
         self.encrypting_dict = (Message.build_shift_dict(self, self.shift)).copy()
         self.message_text_encrypted = Message.apply_shift(self, self.shift)
+
 
 class CiphertextMessage(Message):
     def __init__(self, text):
@@ -216,7 +222,8 @@ class CiphertextMessage(Message):
             self.message_text (string, determined by input text)
             self.valid_words (list, determined using helper function load_words)
         '''
-        pass #delete this line and replace with your code here
+        Message.__init__(self, text)
+        
 
     def decrypt_message(self):
         '''
@@ -234,7 +241,29 @@ class CiphertextMessage(Message):
         Returns: a tuple of the best shift value used to decrypt the message
         and the decrypted message text using that shift value
         '''
-        pass #delete this line and replace with your code here
+        max_words = 0
+        key = 0
+        
+        for shift in range(26):
+            to_decrypt = (self.apply_shift(shift)).split(" ")
+            words_num = 0
+            for word in to_decrypt:
+                if is_word(self.valid_words, word):
+                    words_num += 1
+            if words_num > max_words:
+                max_words = words_num
+                key = shift
+        
+        decrypted = "".join(self.apply_shift(key))
+        
+        return key, decrypted
+
+def decrypt_story():
+    
+    secret = get_story_string()
+    cipher = CiphertextMessage(secret)
+    
+    return cipher.decrypt_message()
 
 #Example test case (PlaintextMessage)
 plaintext = PlaintextMessage('hello', 2)
