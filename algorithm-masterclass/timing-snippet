@@ -1,0 +1,5 @@
+const time1 = Date.now();
+
+const time2 = Date.now();
+
+let time = `The timing of the algorithm is ${time1 - time2} milliseconds`;
