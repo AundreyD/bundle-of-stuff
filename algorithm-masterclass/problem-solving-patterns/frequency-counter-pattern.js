@@ -40,3 +40,28 @@ function same2(arr1, arr2) {
 
 let testArr1 = [1,2,2,3]
 let testArr2 = [1.9,4,4]
+
+//Anagram
+function validAnagram(str1, str2){
+    if(str1.length !== str2.length) {
+        return false;
+    }
+    const lookup = {}
+
+    for (let i = 0; i < str1.length; i++) {
+        let letter = str1[i];
+        //If letter exists, increment, otherwise set to 1
+        lookup[letter] ? lookup[letter] += 1 : lookup[letter] = 1
+    }
+
+    for (let i = 0; i < str2.length; i++) {
+        let letter = str2[i];
+        //If letter exists and isn't zero, reduce by 1 else return false
+        if(lookup[letter]) {
+            lookup[letter] -= 1
+        } else {
+            return false;
+        }
+    }
+    return true;
+}
